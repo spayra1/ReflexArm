@@ -37,7 +37,7 @@ int i = 0;
 
 
 void draw() {
-  delay(1000);
+  delay(8000);
   if(i<1){ i++;
     // in this loop, put the commands to execute once 
     
