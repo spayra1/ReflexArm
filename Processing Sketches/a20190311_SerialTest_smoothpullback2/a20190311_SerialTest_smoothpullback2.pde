@@ -23,7 +23,8 @@ String baserotation = "#0P";
 String shoulder = "#1P";
 String elbow = "#2P";
 String wrist = "#3P";
-String wristrotation = "#4P";
+String wristrotation = "#5P";
+String gripper = "#4P";
 String all = "all";
 
 // position reference
@@ -37,11 +38,11 @@ int i = 0;
 
 
 void draw() {
-  delay(8000);
+  delay(3000);
   if(i<1){ i++;
     // in this loop, put the commands to execute once 
     
-    String[] commandgroup1 = {baserotation, servomap(90), shoulder, servomap(140), elbow, servomap(140), wrist, servomap(90), wristrotation, servomap(90)};
+    String[] commandgroup1 = {baserotation, servomap(90), shoulder, servomap(140), elbow, servomap(140), wrist, servomap(88), gripper, servomap(90)};
     String[] commandgroup2 = {shoulder, servomap(135)};
     execute(commandgroup1);
     delay(500);
