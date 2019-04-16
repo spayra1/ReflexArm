@@ -1,6 +1,7 @@
-// modification of SerialTest_smoothpullback2
-// last edited 3/13/19
+// modification of randommotion
+// last edited 4/15/19
 
+// the purpose of this script is to test out different positions to establish limits for the randommotion script
 
 import processing.serial.*;
 
@@ -11,7 +12,7 @@ void setup() {
   printArray(Serial.list());
   String portnumber = Serial.list()[0];
   SSC = new Serial(this, portnumber, 9600);
-  delay(5000);
+  delay(1000);
 }
 
 // codes to refer to the servos
@@ -24,11 +25,10 @@ String wristrotation = "#4P";
 String gripper = "#5P";
 
 
-
 //0 positions:
 //baserotation: servo left (head-on right)
-//shoulder: all the way forward
-//elbow: full extension 
+//shoulder: full forward
+//elbow: full extension
 
 //90 positions:
 //baserotation: straight forward
@@ -37,18 +37,27 @@ String gripper = "#5P";
 
 //180 positions:
 //baserotation: servo right (head-on left)
-//shoulder: all the way back
+//shoulder: full backward
 //elbow: full flexion (curled against lower arm)
+
 
 void draw() {
   // take note that because of the sensor on the wrist, wrist must stay locked at 90
-  String[] commandgroup1 = {baserotation, randPos(70,110), shoulder, randPos(10,100), elbow, randPos(10,110), wrist, servomap(90), wristrotation, servomap(90)};
-  execute(commandgroup1);
-  delay(2000);
-}
+  String[] leftretracted = {baserotation, servomap(160), shoulder, servomap(160), elbow, servomap(160)};
+  String[] leftquarter = {baserotation, servomap(120), shoulder, servomap(90), elbow, servomap(90)};
+  String[] midfullextend = {baserotation, servomap(90), shoulder, servomap(20), elbow, servomap(10)};
+  String[] rightquarter = {baserotation, servomap(50), shoulder, servomap(90), elbow, servomap(90)};
+  String[] rightretracted = {baserotation, servomap(20), shoulder, servomap(160), elbow, servomap(160)};
+  
+  // array of the arrays above
+  String[][] commandgroup = {leftretracted, leftquarter, midfullextend, rightquarter, rightretracted, rightquarter, midfullextend, leftquarter};
+  
+  // iterates through the array array and executes each one at a time, pausing 2 seconds in between
+  for(String[] command : commandgroup) {
+    execute(command);
+    delay(2000);
+  }
 
-String randPos(int low, int high) {
-  return servomap(int(random(low, high)));
 }
 
 // position reference
@@ -62,9 +71,10 @@ String servomap(int degree) {
 String output;
 String commandConcatenate(String[] commandgroup) {
   output = "";
-  for(int i = 0; i<commandgroup.length; i++){
-    output += commandgroup[i];
+  for(String command : commandgroup){
+    output += command;
   }
+  output += "#3P1500#4P1500";
   output += "T2000";
   output += "\r";
   return output;
